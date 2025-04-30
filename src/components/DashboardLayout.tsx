@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import { File, LogOut, Upload, Dashboard as DashIcon } from "lucide-react";
+import { File, LogOut, Upload, LayoutDashboard } from "lucide-react";
 import { toast } from "@/components/ui/sonner";
 
 interface DashboardLayoutProps {
@@ -36,7 +36,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
             
             <div className="mt-3 space-y-2">
               <Link to="/dashboard" className="flex items-center px-4 py-2 text-sm font-medium rounded-md bg-gray-800 text-white">
-                <DashIcon className="mr-3 h-5 w-5" />
+                <LayoutDashboard className="mr-3 h-5 w-5" />
                 Dashboard
               </Link>
               
