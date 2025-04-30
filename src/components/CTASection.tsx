@@ -12,14 +12,14 @@ const CTASection: React.FC = () => {
             <div className="lg:self-center">
               <h2 className="text-3xl font-extrabold text-white sm:text-4xl">
                 <span className="block">Ready to transform</span>
-                <span className="block">your educational materials?</span>
+                <span className="block">your customer support?</span>
               </h2>
               <p className="mt-4 text-lg leading-6 text-indigo-100">
-                Start creating AI-powered chatbots today and elevate the learning experience for your students.
+                Start creating AI-powered chatbots today and elevate the experience for your customers.
               </p>
               <div className="mt-8 flex flex-col sm:flex-row">
                 <Button asChild className="bg-white text-databot-purple hover:bg-gray-100 shadow-md py-6 px-8">
-                  <Link to="/pricing">Get Started for Free</Link>
+                  <Link to="/login">Get Started for Free</Link>
                 </Button>
                 <Button asChild className="bg-transparent text-white border border-white hover:bg-white/10 mt-3 sm:mt-0 sm:ml-3 py-6 px-8">
                   <Link to="/about">Learn More</Link>

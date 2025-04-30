@@ -28,8 +28,11 @@ const Navbar: React.FC = () => {
             <Link to="/pricing" className="text-gray-700 hover:text-databot-purple px-3 py-2 font-medium">
               Pricing
             </Link>
+            <Link to="/login" className="text-gray-700 hover:text-databot-purple px-3 py-2 font-medium">
+              Login
+            </Link>
             <Button asChild className="gradient-bg ml-4">
-              <Link to="/pricing">Get Started</Link>
+              <Link to="/signup">Get Started</Link>
             </Button>
           </div>
           
@@ -70,8 +73,15 @@ const Navbar: React.FC = () => {
             >
               Pricing
             </Link>
+            <Link
+              to="/login"
+              className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Login
+            </Link>
             <Button asChild className="gradient-bg w-full mt-4">
-              <Link to="/pricing" onClick={() => setMobileMenuOpen(false)}>Get Started</Link>
+              <Link to="/signup" onClick={() => setMobileMenuOpen(false)}>Get Started</Link>
             </Button>
           </div>
         </div>

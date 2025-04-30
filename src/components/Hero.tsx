@@ -12,15 +12,15 @@ const Hero: React.FC = () => {
             <div className="text-center lg:text-left">
               <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl md:text-6xl">
                 <span className="block">Custom AI Chatbots for</span>
-                <span className="block gradient-text">Student Success</span>
+                <span className="block gradient-text">Business Owners</span>
               </h1>
               <p className="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto lg:mx-0 md:mt-5 md:text-xl">
-                Transform your PDFs into intelligent chatbots that help students learn faster and more effectively. Databotics makes learning interactive and personalized.
+                Transform your PDFs into intelligent chatbots that help customers find information faster and more effectively. Databotics makes customer support interactive and personalized.
               </p>
               <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
                 <div className="rounded-md shadow">
                   <Button asChild className="gradient-bg w-full text-lg py-6 px-8">
-                    <Link to="/pricing">Get Started</Link>
+                    <Link to="/login">Get Started</Link>
                   </Button>
                 </div>
                 <div className="mt-3 sm:mt-0 sm:ml-3">
