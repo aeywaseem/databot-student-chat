@@ -21,31 +21,31 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   return (
     <div className="min-h-screen flex">
       {/* Sidebar */}
-      <div className="w-64 bg-gray-900 text-white flex-shrink-0">
+      <div className="w-64 bg-databot-darkblue text-white flex-shrink-0">
         <div className="p-4">
           <Link to="/" className="flex items-center">
-            <span className="text-2xl font-bold gradient-text">Databotics</span>
+            <span className="text-2xl font-bold text-white">Databotics</span>
           </Link>
         </div>
         
         <nav className="mt-8">
           <div className="px-4">
-            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+            <p className="text-xs font-semibold text-blue-200 uppercase tracking-wider">
               General
             </p>
             
             <div className="mt-3 space-y-2">
-              <Link to="/dashboard" className="flex items-center px-4 py-2 text-sm font-medium rounded-md bg-gray-800 text-white">
+              <Link to="/dashboard" className="flex items-center px-4 py-2 text-sm font-medium rounded-md bg-databot-blue text-white">
                 <LayoutDashboard className="mr-3 h-5 w-5" />
                 Dashboard
               </Link>
               
-              <Link to="/create-chatbot" className="flex items-center px-4 py-2 text-sm font-medium rounded-md text-gray-300 hover:bg-gray-800 hover:text-white">
+              <Link to="/create-chatbot" className="flex items-center px-4 py-2 text-sm font-medium rounded-md text-blue-100 hover:bg-databot-blue hover:text-white">
                 <Upload className="mr-3 h-5 w-5" />
                 Create Chatbot
               </Link>
               
-              <Link to="/manage-chatbots" className="flex items-center px-4 py-2 text-sm font-medium rounded-md text-gray-300 hover:bg-gray-800 hover:text-white">
+              <Link to="/manage-chatbots" className="flex items-center px-4 py-2 text-sm font-medium rounded-md text-blue-100 hover:bg-databot-blue hover:text-white">
                 <File className="mr-3 h-5 w-5" />
                 Manage Chatbots
               </Link>
@@ -53,23 +53,23 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
           </div>
           
           <div className="px-4 mt-8">
-            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+            <p className="text-xs font-semibold text-blue-200 uppercase tracking-wider">
               Account
             </p>
             
             <div className="mt-3 space-y-2">
-              <Link to="/profile" className="flex items-center px-4 py-2 text-sm font-medium rounded-md text-gray-300 hover:bg-gray-800 hover:text-white">
+              <Link to="/profile" className="flex items-center px-4 py-2 text-sm font-medium rounded-md text-blue-100 hover:bg-databot-blue hover:text-white">
                 Profile
               </Link>
               
-              <Link to="/billing" className="flex items-center px-4 py-2 text-sm font-medium rounded-md text-gray-300 hover:bg-gray-800 hover:text-white">
+              <Link to="/billing" className="flex items-center px-4 py-2 text-sm font-medium rounded-md text-blue-100 hover:bg-databot-blue hover:text-white">
                 Billing
               </Link>
               
               <Button
                 onClick={handleLogout}
                 variant="ghost"
-                className="flex w-full items-center px-4 py-2 text-sm font-medium rounded-md text-gray-300 hover:bg-gray-800 hover:text-white"
+                className="flex w-full items-center px-4 py-2 text-sm font-medium rounded-md text-blue-100 hover:bg-databot-blue hover:text-white"
               >
                 <LogOut className="mr-3 h-5 w-5" />
                 Logout

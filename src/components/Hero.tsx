@@ -34,14 +34,14 @@ const Hero: React.FC = () => {
         </div>
       </div>
       <div className="hidden lg:block lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
-        <div className="h-56 w-full sm:h-72 md:h-96 lg:w-full lg:h-full bg-gradient-to-br from-databot-purple to-databot-blue opacity-10 absolute"></div>
+        <div className="h-56 w-full sm:h-72 md:h-96 lg:w-full lg:h-full bg-gradient-to-br from-databot-blue to-databot-darkblue opacity-10 absolute"></div>
         <div className="h-56 w-full sm:h-72 md:h-96 lg:w-full lg:h-full flex items-center justify-center">
           <div className="relative w-[80%] h-[80%] animate-float">
             <div className="absolute top-0 right-0 w-64 h-64 bg-databot-blue rounded-2xl opacity-20 transform rotate-12"></div>
-            <div className="absolute top-12 right-12 w-64 h-64 bg-databot-purple rounded-2xl opacity-20 transform -rotate-6"></div>
-            <div className="absolute top-24 right-24 w-64 h-64 bg-databot-indigo rounded-2xl opacity-30 transform rotate-45"></div>
+            <div className="absolute top-12 right-12 w-64 h-64 bg-databot-darkblue rounded-2xl opacity-20 transform -rotate-6"></div>
+            <div className="absolute top-24 right-24 w-64 h-64 bg-databot-orange rounded-2xl opacity-30 transform rotate-45"></div>
             <div className="absolute top-20 left-20 w-32 h-32 bg-databot-blue rounded-full opacity-10"></div>
-            <div className="absolute bottom-12 left-10 w-48 h-48 bg-databot-purple rounded-full opacity-10"></div>
+            <div className="absolute bottom-12 left-10 w-48 h-48 bg-databot-darkblue rounded-full opacity-10"></div>
           </div>
         </div>
       </div>
