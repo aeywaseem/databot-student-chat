@@ -24,6 +24,11 @@ const Hero: React.FC = () => {
                   </Button>
                 </div>
                 <div className="mt-3 sm:mt-0 sm:ml-3">
+                  <Button asChild className="gradient-secondary w-full text-lg text-white py-6 px-8">
+                    <Link to="/create-chatbot">Try Demo</Link>
+                  </Button>
+                </div>
+                <div className="mt-3 sm:mt-0 sm:ml-3">
                   <Button variant="outline" asChild className="w-full text-lg py-6 px-8">
                     <Link to="/about">Learn More</Link>
                   </Button>
@@ -40,8 +45,8 @@ const Hero: React.FC = () => {
             <div className="absolute top-0 right-0 w-64 h-64 bg-databot-blue rounded-2xl opacity-20 transform rotate-12"></div>
             <div className="absolute top-12 right-12 w-64 h-64 bg-databot-darkblue rounded-2xl opacity-20 transform -rotate-6"></div>
             <div className="absolute top-24 right-24 w-64 h-64 bg-databot-orange rounded-2xl opacity-30 transform rotate-45"></div>
-            <div className="absolute top-20 left-20 w-32 h-32 bg-databot-blue rounded-full opacity-10"></div>
-            <div className="absolute bottom-12 left-10 w-48 h-48 bg-databot-darkblue rounded-full opacity-10"></div>
+            <div className="absolute top-20 left-20 w-32 h-32 bg-databot-teal rounded-full opacity-10"></div>
+            <div className="absolute bottom-12 left-10 w-48 h-48 bg-databot-purple rounded-full opacity-10"></div>
           </div>
         </div>
       </div>

@@ -18,8 +18,11 @@ const CTASection: React.FC = () => {
                 Start creating AI-powered chatbots today and elevate the experience for your customers.
               </p>
               <div className="mt-8 flex flex-col sm:flex-row">
-                <Button asChild className="bg-white text-databot-blue hover:bg-gray-100 shadow-md py-6 px-8">
+                <Button asChild className="gradient-secondary text-white hover:bg-orange-600 shadow-md py-6 px-8">
                   <Link to="/login">Get Started for Free</Link>
+                </Button>
+                <Button asChild className="gradient-teal text-white mt-3 sm:mt-0 sm:ml-3 py-6 px-8">
+                  <Link to="/create-chatbot">Try Demo</Link>
                 </Button>
                 <Button asChild className="bg-transparent text-white border border-white hover:bg-white/10 mt-3 sm:mt-0 sm:ml-3 py-6 px-8">
                   <Link to="/about">Learn More</Link>

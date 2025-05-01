@@ -53,6 +53,18 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				success: {
+					DEFAULT: 'hsl(var(--success))',
+					foreground: 'hsl(var(--success-foreground))'
+				},
+				info: {
+					DEFAULT: 'hsl(var(--info))',
+					foreground: 'hsl(var(--info-foreground))'
+				},
+				warning: {
+					DEFAULT: 'hsl(var(--warning))',
+					foreground: 'hsl(var(--warning-foreground))'
+				},
 				databots: {
 					50: '#e6f4fc',
 					100: '#cce9f9',
@@ -69,6 +81,10 @@ export default {
 					blue: '#005f8c',
 					darkblue: '#00486b',
 					orange: '#ff7b40',
+					teal: '#00b8a9',
+					purple: '#7940c1',
+					green: '#4caf50',
+					yellow: '#ffc107'
 				}
 			},
 			borderRadius: {

@@ -28,7 +28,7 @@ const Index: React.FC = () => {
             <div className="mt-16">
               <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
                 <div className="relative p-6 bg-white border border-gray-100 rounded-xl card-shadow text-center">
-                  <div className="inline-flex items-center justify-center h-12 w-12 rounded-full bg-databot-purple text-white mb-4 text-lg font-bold">
+                  <div className="inline-flex items-center justify-center h-12 w-12 rounded-full bg-databot-blue text-white mb-4 text-lg font-bold">
                     1
                   </div>
                   <h3 className="text-lg font-medium text-gray-900">Upload Your PDFs</h3>
@@ -38,7 +38,7 @@ const Index: React.FC = () => {
                 </div>
                 
                 <div className="relative p-6 bg-white border border-gray-100 rounded-xl card-shadow text-center">
-                  <div className="inline-flex items-center justify-center h-12 w-12 rounded-full bg-databot-purple text-white mb-4 text-lg font-bold">
+                  <div className="inline-flex items-center justify-center h-12 w-12 rounded-full bg-databot-orange text-white mb-4 text-lg font-bold">
                     2
                   </div>
                   <h3 className="text-lg font-medium text-gray-900">Customize Your Bot</h3>
@@ -48,7 +48,7 @@ const Index: React.FC = () => {
                 </div>
                 
                 <div className="relative p-6 bg-white border border-gray-100 rounded-xl card-shadow text-center">
-                  <div className="inline-flex items-center justify-center h-12 w-12 rounded-full bg-databot-purple text-white mb-4 text-lg font-bold">
+                  <div className="inline-flex items-center justify-center h-12 w-12 rounded-full bg-databot-teal text-white mb-4 text-lg font-bold">
                     3
                   </div>
                   <h3 className="text-lg font-medium text-gray-900">Share with Students</h3>
@@ -113,7 +113,7 @@ const Index: React.FC = () => {
               <div className="p-6 bg-white rounded-xl shadow-sm border border-gray-100">
                 <div className="flex items-center">
                   <div className="flex-shrink-0">
-                    <div className="h-10 w-10 rounded-full bg-databot-indigo text-white flex items-center justify-center font-bold">
+                    <div className="h-10 w-10 rounded-full bg-databot-teal text-white flex items-center justify-center font-bold">
                       RJ
                     </div>
                   </div>
