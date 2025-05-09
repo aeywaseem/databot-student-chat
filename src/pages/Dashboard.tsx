@@ -71,36 +71,53 @@ const Dashboard: React.FC = () => {
     formData.append('file', pdfFile);
     formData.append('api_key', apiKey);
     
-    try {
-      // Upload to your FastAPI backend
-      const response = await fetch('https://your-fastapi-backend.com/upload-pdf/', {
-        method: 'POST',
-        body: formData,
-        // Track upload progress
-        onUploadProgress: (progressEvent: any) => {
-          const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+    // Use XMLHttpRequest for progress tracking instead of fetch
+    return new Promise<void>((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      
+      // Track upload progress
+      xhr.upload.onprogress = (event) => {
+        if (event.lengthComputable) {
+          const percentCompleted = Math.round((event.loaded * 100) / event.total);
           setUploadProgress(percentCompleted);
         }
-      });
+      };
       
-      if (!response.ok) {
-        throw new Error('Failed to upload PDF');
-      }
+      xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          try {
+            const data = JSON.parse(xhr.responseText);
+            setPdfId(data.pdf_id);
+            localStorage.setItem('latest_pdf_id', data.pdf_id);
+            
+            toast.success("PDF uploaded successfully! Your chatbot is being prepared.");
+            
+            // Start checking for chatbot readiness
+            setTimeout(() => checkChatbotStatus(data.pdf_id), 30000);
+            resolve();
+          } catch (error) {
+            console.error('Error parsing response:', error);
+            toast.error("Failed to upload PDF. Please try again.");
+            reject(error);
+          }
+        } else {
+          console.error('Upload failed:', xhr.statusText);
+          toast.error("Failed to upload PDF. Please try again.");
+          reject(new Error(xhr.statusText));
+        }
+        setIsUploading(false);
+      };
       
-      const data = await response.json();
-      setPdfId(data.pdf_id);
-      localStorage.setItem('latest_pdf_id', data.pdf_id);
+      xhr.onerror = () => {
+        console.error('Upload request failed');
+        toast.error("Failed to upload PDF. Please try again.");
+        setIsUploading(false);
+        reject(new Error('Network error'));
+      };
       
-      toast.success("PDF uploaded successfully! Your chatbot is being prepared.");
-      
-      // Start checking for chatbot readiness
-      setTimeout(() => checkChatbotStatus(data.pdf_id), 30000);
-    } catch (error) {
-      console.error('Error uploading PDF:', error);
-      toast.error("Failed to upload PDF. Please try again.");
-    } finally {
-      setIsUploading(false);
-    }
+      xhr.open('POST', 'https://your-fastapi-backend.com/upload-pdf/', true);
+      xhr.send(formData);
+    });
   };
 
   const createNewChatbot = () => {
