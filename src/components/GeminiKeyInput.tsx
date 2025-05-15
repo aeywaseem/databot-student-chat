@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/components/ui/sonner";
+import { Key } from "lucide-react";
 
 interface GeminiKeyInputProps {
   onKeySubmit: (key: string) => void;
@@ -42,6 +43,10 @@ const GeminiKeyInput: React.FC<GeminiKeyInputProps> = ({ onKeySubmit, apiKey }) 
     }
   };
 
+  const openGeminiApiPage = () => {
+    window.open('https://aistudio.google.com/app/apikey', '_blank');
+  };
+
   return (
     <Card className="w-full shadow-md">
       <CardHeader>
@@ -52,18 +57,26 @@ const GeminiKeyInput: React.FC<GeminiKeyInputProps> = ({ onKeySubmit, apiKey }) 
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <p className="text-sm text-gray-500">
-              Don't have a Gemini API key yet?{" "}
-              <a 
-                href="https://aistudio.google.com/app/apikey" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-databot-blue hover:underline"
-              >
-                Get one here
-              </a>
-            </p>
+          <div className="space-y-4">
+            <Button 
+              type="button" 
+              onClick={openGeminiApiPage}
+              variant="outline" 
+              className="w-full flex items-center justify-center gap-2"
+            >
+              <Key size={18} />
+              Generate Gemini API Key
+            </Button>
+            
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t"></span>
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-background px-2 text-muted-foreground">Enter your API key</span>
+              </div>
+            </div>
+            
             <Input
               type="password"
               value={key}
