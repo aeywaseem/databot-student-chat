@@ -19,11 +19,6 @@ const Hero: React.FC = () => {
               </p>
               <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
                 <div className="rounded-md shadow">
-                  <Button asChild className="gradient-bg w-full text-lg py-6 px-8">
-                    <Link to="/login">Get Started</Link>
-                  </Button>
-                </div>
-                <div className="mt-3 sm:mt-0 sm:ml-3">
                   <Button variant="outline" asChild className="w-full text-lg py-6 px-8">
                     <Link to="/about">Learn More</Link>
                   </Button>
