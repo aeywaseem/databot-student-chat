@@ -30,11 +30,11 @@ const Hero: React.FC = () => {
       </div>
       <div className="lg:block lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
         <div className="h-56 w-full sm:h-72 md:h-96 lg:w-full lg:h-full bg-gradient-to-br from-databot-blue to-databot-darkblue opacity-10 absolute"></div>
-        <div className="h-56 w-full sm:h-72 md:h-96 lg:w-full lg:h-full flex items-center justify-center">
+        <div className="h-56 w-full sm:h-72 md:h-96 lg:w-full lg:h-full flex items-center justify-center p-6 lg:p-12">
           <img 
-            src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158" 
-            alt="Business person using AI chatbot" 
-            className="object-cover rounded-lg shadow-lg max-h-full max-w-full z-10 relative"
+            src="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b" 
+            alt="Technology interface visualization" 
+            className="object-cover rounded-lg shadow-lg max-w-full max-h-full z-10 relative"
           />
         </div>
       </div>
