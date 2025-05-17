@@ -27,13 +27,6 @@ const GeminiKeyInput: React.FC<GeminiKeyInputProps> = ({ onKeySubmit, apiKey }) 
     
     setIsSubmitting(true);
     
-    // Validate the API key format (basic validation)
-    if (!key.startsWith('AI') || key.length < 10) {
-      toast.error("Invalid API key format. Please check your key.");
-      setIsSubmitting(false);
-      return;
-    }
-    
     try {
       // Save API key to localStorage
       localStorage.setItem('gemini_api_key', key);
@@ -118,7 +111,7 @@ const GeminiKeyInput: React.FC<GeminiKeyInputProps> = ({ onKeySubmit, apiKey }) 
               type="password"
               value={key}
               onChange={(e) => setKey(e.target.value)}
-              placeholder="Enter your Gemini API key"
+              placeholder="Enter your Gemini API key (e.g., AIzaSyBA6On4KtZJp9W2FMal7POHQ-r3_KoaArI)"
               className="w-full"
               required
             />
@@ -137,6 +130,6 @@ const GeminiKeyInput: React.FC<GeminiKeyInputProps> = ({ onKeySubmit, apiKey }) 
       </CardFooter>
     </Card>
   );
-};
+}
 
 export default GeminiKeyInput;

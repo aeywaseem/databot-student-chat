@@ -69,10 +69,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             email: email 
           }]);
         
-        if (profileError) throw profileError;
+        if (profileError) {
+          console.error("Error creating profile:", profileError);
+          // Continue even if profile creation fails, as we can handle that later
+        }
       }
       
-      toast.success('Account created successfully! Please log in.');
+      toast.success('Account created successfully! Please check your email for confirmation.');
       navigate('/login');
     } catch (error: any) {
       toast.error(error.message || 'An error occurred during signup.');
