@@ -6,10 +6,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Link, useNavigate } from 'react-router-dom';
-import { toast } from "@/components/ui/sonner";
+import { Link } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { Spinner } from '@/components/ui/spinner';
 
 const signupSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -24,7 +25,7 @@ const signupSchema = z.object({
 type SignupFormValues = z.infer<typeof signupSchema>;
 
 const Signup: React.FC = () => {
-  const navigate = useNavigate();
+  const { signUp, isLoading } = useAuth();
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
@@ -35,17 +36,8 @@ const Signup: React.FC = () => {
     },
   });
 
-  const onSubmit = (data: SignupFormValues) => {
-    // In a real application, this is where you would make an API call to create an account
-    console.log('Signup attempt:', data);
-    
-    // For demo purposes, let's simulate a successful signup
-    toast.success("Account created successfully! Redirecting to dashboard...");
-    
-    // Redirect to dashboard after successful signup
-    setTimeout(() => {
-      navigate('/dashboard');
-    }, 1500);
+  const onSubmit = async (data: SignupFormValues) => {
+    await signUp(data.email, data.password, data.name);
   };
 
   return (
@@ -119,8 +111,14 @@ const Signup: React.FC = () => {
                   )}
                 />
                 
-                <Button type="submit" className="w-full gradient-bg py-6">
-                  Sign up
+                <Button type="submit" className="w-full gradient-bg py-6" disabled={isLoading}>
+                  {isLoading ? (
+                    <div className="flex items-center justify-center gap-2">
+                      <Spinner size="sm" /> Creating account...
+                    </div>
+                  ) : (
+                    'Sign up'
+                  )}
                 </Button>
               </form>
             </Form>

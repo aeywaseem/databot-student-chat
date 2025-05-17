@@ -1,21 +1,19 @@
 
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { File, LogOut, Upload, LayoutDashboard } from "lucide-react";
-import { toast } from "@/components/ui/sonner";
+import { useAuth } from '@/contexts/AuthContext';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
 }
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
-  const navigate = useNavigate();
+  const { signOut, user } = useAuth();
   
   const handleLogout = () => {
-    // In a real app, this would make an API call to log the user out
-    toast.success("Logged out successfully");
-    navigate('/');
+    signOut();
   };
   
   return (
@@ -58,13 +56,9 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
             </p>
             
             <div className="mt-3 space-y-2">
-              <Link to="/profile" className="flex items-center px-4 py-2 text-sm font-medium rounded-md text-blue-100 hover:bg-databot-blue hover:text-white">
-                Profile
-              </Link>
-              
-              <Link to="/billing" className="flex items-center px-4 py-2 text-sm font-medium rounded-md text-blue-100 hover:bg-databot-blue hover:text-white">
-                Billing
-              </Link>
+              <div className="px-4 py-2 text-sm text-blue-100">
+                {user?.email}
+              </div>
               
               <Button
                 onClick={handleLogout}

@@ -6,10 +6,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Link, useNavigate } from 'react-router-dom';
-import { toast } from "@/components/ui/sonner";
+import { Link } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { Spinner } from '@/components/ui/spinner';
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address." }),
@@ -19,7 +20,7 @@ const loginSchema = z.object({
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 const Login: React.FC = () => {
-  const navigate = useNavigate();
+  const { signIn, isLoading } = useAuth();
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -28,17 +29,8 @@ const Login: React.FC = () => {
     },
   });
 
-  const onSubmit = (data: LoginFormValues) => {
-    // In a real application, this is where you would make an API call to authenticate
-    console.log('Login attempt:', data);
-    
-    // For demo purposes, let's simulate a successful login
-    toast.success("Login successful!");
-    
-    // Redirect to dashboard after successful login
-    setTimeout(() => {
-      navigate('/dashboard');
-    }, 1000);
+  const onSubmit = async (data: LoginFormValues) => {
+    await signIn(data.email, data.password);
   };
 
   return (
@@ -84,8 +76,14 @@ const Login: React.FC = () => {
                   )}
                 />
                 
-                <Button type="submit" className="w-full gradient-bg py-6">
-                  Log in
+                <Button type="submit" className="w-full gradient-bg py-6" disabled={isLoading}>
+                  {isLoading ? (
+                    <div className="flex items-center justify-center gap-2">
+                      <Spinner size="sm" /> Logging in...
+                    </div>
+                  ) : (
+                    'Log in'
+                  )}
                 </Button>
               </form>
             </Form>
