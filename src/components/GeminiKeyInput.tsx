@@ -6,7 +6,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { toast } from "@/components/ui/sonner";
 import { Key } from "lucide-react";
 import { useAuth } from '@/contexts/AuthContext';
-import { supabase } from '@/lib/supabase';
 
 interface GeminiKeyInputProps {
   onKeySubmit: (key: string) => void;
@@ -16,7 +15,6 @@ interface GeminiKeyInputProps {
 const GeminiKeyInput: React.FC<GeminiKeyInputProps> = ({ onKeySubmit, apiKey }) => {
   const [key, setKey] = useState(apiKey || '');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { user } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,18 +26,8 @@ const GeminiKeyInput: React.FC<GeminiKeyInputProps> = ({ onKeySubmit, apiKey }) 
     setIsSubmitting(true);
     
     try {
-      // Save API key to localStorage
+      // Save API key to localStorage only
       localStorage.setItem('gemini_api_key', key);
-      
-      // If user is logged in, also save to their profile in Supabase
-      if (user) {
-        const { error } = await supabase
-          .from('profiles')
-          .update({ gemini_api_key: key })
-          .eq('id', user.id);
-          
-        if (error) throw error;
-      }
       
       // Call the onKeySubmit callback
       onKeySubmit(key);
@@ -56,26 +44,14 @@ const GeminiKeyInput: React.FC<GeminiKeyInputProps> = ({ onKeySubmit, apiKey }) 
     window.open('https://aistudio.google.com/app/apikey', '_blank');
   };
 
-  // Load API key from user profile when they login
+  // Load API key from localStorage when component mounts
   useEffect(() => {
-    const loadApiKey = async () => {
-      if (user) {
-        const { data, error } = await supabase
-          .from('profiles')
-          .select('gemini_api_key')
-          .eq('id', user.id)
-          .single();
-          
-        if (!error && data?.gemini_api_key) {
-          setKey(data.gemini_api_key);
-          localStorage.setItem('gemini_api_key', data.gemini_api_key);
-          onKeySubmit(data.gemini_api_key);
-        }
-      }
-    };
-    
-    loadApiKey();
-  }, [user, onKeySubmit]);
+    const savedKey = localStorage.getItem('gemini_api_key');
+    if (savedKey) {
+      setKey(savedKey);
+      onKeySubmit(savedKey);
+    }
+  }, [onKeySubmit]);
 
   return (
     <Card className="w-full shadow-md">
@@ -126,7 +102,7 @@ const GeminiKeyInput: React.FC<GeminiKeyInputProps> = ({ onKeySubmit, apiKey }) 
         </form>
       </CardContent>
       <CardFooter className="text-xs text-gray-500">
-        Your API key is stored locally on your device and in your secure user profile.
+        Your API key is stored locally on your device only.
       </CardFooter>
     </Card>
   );

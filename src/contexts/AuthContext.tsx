@@ -16,6 +16,9 @@ interface AuthContextProps {
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
+// Set the redirect URL for auth operations
+const redirectUrl = 'https://databot-student-chat.lovable.app';
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
@@ -39,6 +42,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     );
 
+    // Set the redirect URL for the Supabase client
+    supabase.auth.setSession({
+      access_token: session?.access_token || '',
+      refresh_token: session?.refresh_token || '',
+    });
+
     return () => {
       subscription.unsubscribe();
     };
@@ -54,29 +63,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           data: {
             full_name: name,
           },
+          emailRedirectTo: redirectUrl,
         },
       });
 
       if (error) throw error;
       
       if (data.user) {
-        // Create a profile record for the new user
-        const { error: profileError } = await supabase
-          .from('profiles')
-          .insert([{ 
-            id: data.user.id, 
-            full_name: name,
-            email: email 
-          }]);
-        
-        if (profileError) {
-          console.error("Error creating profile:", profileError);
-          // Continue even if profile creation fails, as we can handle that later
-        }
+        // We don't need to create profile records anymore
+        toast.success('Account created successfully! Please check your email for confirmation.');
+        navigate('/login');
       }
-      
-      toast.success('Account created successfully! Please check your email for confirmation.');
-      navigate('/login');
     } catch (error: any) {
       toast.error(error.message || 'An error occurred during signup.');
       console.error('Error signing up:', error);
