@@ -1,8 +1,9 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Send } from "lucide-react";
+import { supabase } from '@/lib/supabase';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface Message {
   id: string;
@@ -23,6 +24,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ apiKey, pdfId, isReady })
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const { user } = useAuth();
   
   // Scroll to bottom when messages change
   useEffect(() => {
@@ -39,7 +41,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ apiKey, pdfId, isReady })
   const handleSendMessage = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     
-    if (!input.trim() || !apiKey || !pdfId || !isReady) return;
+    if (!input.trim() || !apiKey || !pdfId || !isReady || !user) return;
     
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -53,24 +55,17 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ apiKey, pdfId, isReady })
     setIsLoading(true);
     
     try {
-      // Call your backend API to get a response
-      const response = await fetch('https://your-fastapi-backend.com/chat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
+      // Call Supabase edge function to query the document
+      const { data, error } = await supabase.functions.invoke('query-document', {
+        body: {
           query: input,
-          pdf_id: pdfId,
-          api_key: apiKey
-        })
+          pdfId: pdfId,
+          apiKey: apiKey,
+          userId: user.id
+        }
       });
       
-      if (!response.ok) {
-        throw new Error('Failed to get response from AI');
-      }
-      
-      const data = await response.json();
+      if (error) throw error;
       
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
@@ -80,7 +75,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ apiKey, pdfId, isReady })
       };
       
       setMessages(prev => [...prev, botMessage]);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error getting AI response:', error);
       
       const errorMessage: Message = {
@@ -100,7 +95,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ apiKey, pdfId, isReady })
     return (
       <div className="w-full p-6 bg-white rounded-lg shadow-md text-center">
         <p className="text-gray-600">
-          Your chatbot is being prepared. This typically takes 5-6 minutes after uploading your PDF.
+          Your chatbot is being prepared. This typically takes 3-4 minutes after uploading your PDF.
         </p>
         <div className="mt-4 flex justify-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-databot-purple"></div>

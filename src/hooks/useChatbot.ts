@@ -1,6 +1,9 @@
 
 import { useState, useEffect } from 'react';
 import { toast } from "@/components/ui/sonner";
+import { supabase } from "@/lib/supabase";
+import { useAuth } from '@/contexts/AuthContext';
+import { v4 as uuidv4 } from 'uuid';
 
 export const useChatbot = () => {
   const [apiKey, setApiKey] = useState<string | null>(null);
@@ -9,6 +12,7 @@ export const useChatbot = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [chatbotReady, setChatbotReady] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const { user } = useAuth();
 
   // Load API key from localStorage on component mount
   useEffect(() => {
@@ -28,19 +32,23 @@ export const useChatbot = () => {
   
   const checkChatbotStatus = async (id: string) => {
     try {
-      // Call your backend to check if the chatbot is ready
-      const response = await fetch(`https://your-fastapi-backend.com/chatbot-status/${id}`);
+      // Check if the vector embedding process is complete
+      const { data, error } = await supabase
+        .from('pdf_documents')
+        .select('processing_status')
+        .eq('id', id)
+        .single();
       
-      if (!response.ok) {
-        throw new Error('Failed to check chatbot status');
+      if (error) {
+        throw error;
       }
       
-      const data = await response.json();
-      setChatbotReady(data.ready);
+      const isReady = data?.processing_status === 'completed';
+      setChatbotReady(isReady);
       
       // If not ready, check again in 30 seconds
-      if (!data.ready) {
-        setTimeout(() => checkChatbotStatus(id), 30000);
+      if (!isReady) {
+        setTimeout(() => checkChatbotStatus(id), 10000);
       }
     } catch (error) {
       console.error('Error checking chatbot status:', error);
@@ -53,67 +61,91 @@ export const useChatbot = () => {
   };
   
   const handleUploadPDF = async () => {
-    if (!pdfFile || !apiKey) return;
+    if (!pdfFile || !apiKey || !user) {
+      if (!user) toast.error("You must be logged in to upload documents");
+      return;
+    }
     
     setIsUploading(true);
     setUploadProgress(0);
     
-    // Create form data for the file upload
-    const formData = new FormData();
-    formData.append('file', pdfFile);
-    formData.append('api_key', apiKey);
-    
-    // Use XMLHttpRequest for progress tracking instead of fetch
-    return new Promise<void>((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
+    try {
+      // 1. Generate a unique ID for the document
+      const docId = uuidv4();
       
-      // Track upload progress
-      xhr.upload.onprogress = (event) => {
-        if (event.lengthComputable) {
-          const percentCompleted = Math.round((event.loaded * 100) / event.total);
-          setUploadProgress(percentCompleted);
-        }
-      };
+      // 2. Create a metadata record in the database
+      const { error: metadataError } = await supabase
+        .from('pdf_documents')
+        .insert({
+          id: docId,
+          user_id: user.id,
+          file_name: pdfFile.name,
+          file_size: pdfFile.size,
+          processing_status: 'uploading'
+        });
+        
+      if (metadataError) throw metadataError;
+        
+      // 3. Upload the PDF file to Supabase Storage
+      const filePath = `documents/${user.id}/${docId}/${pdfFile.name}`;
       
-      xhr.onload = () => {
-        if (xhr.status >= 200 && xhr.status < 300) {
-          try {
-            const data = JSON.parse(xhr.responseText);
-            setPdfId(data.pdf_id);
-            localStorage.setItem('latest_pdf_id', data.pdf_id);
-            
-            toast.success("PDF uploaded successfully! Your chatbot is being prepared.");
-            
-            // Start checking for chatbot readiness
-            setTimeout(() => checkChatbotStatus(data.pdf_id), 30000);
-            resolve();
-          } catch (error) {
-            console.error('Error parsing response:', error);
-            toast.error("Failed to upload PDF. Please try again.");
-            reject(error);
+      // Upload with progress tracking
+      const { error: uploadError } = await supabase.storage
+        .from('pdfs')
+        .upload(filePath, pdfFile, {
+          onUploadProgress: (progress) => {
+            const percentCompleted = Math.round((progress.loaded * 50) / progress.total);
+            setUploadProgress(percentCompleted); // Max 50% for upload phase
           }
-        } else {
-          console.error('Upload failed:', xhr.statusText);
-          toast.error("Failed to upload PDF. Please try again.");
-          reject(new Error(xhr.statusText));
+        });
+        
+      if (uploadError) throw uploadError;
+        
+      // 4. Call an edge function to process the document and create vector embeddings
+      setUploadProgress(50); // Upload complete, start processing
+      
+      // Update status to processing
+      const { error: updateError } = await supabase
+        .from('pdf_documents')
+        .update({ processing_status: 'processing' })
+        .eq('id', docId);
+        
+      if (updateError) throw updateError;
+      
+      // Invoke edge function to process document and create embeddings
+      const { error: functionError } = await supabase.functions.invoke('process-document', {
+        body: {
+          docId: docId,
+          userId: user.id,
+          filePath: filePath,
+          apiKey: apiKey
         }
-        setIsUploading(false);
-      };
+      });
       
-      xhr.onerror = () => {
-        console.error('Upload request failed');
-        toast.error("Failed to upload PDF. Please try again.");
-        setIsUploading(false);
-        reject(new Error('Network error'));
-      };
+      if (functionError) throw functionError;
       
-      xhr.open('POST', 'https://your-fastapi-backend.com/upload-pdf/', true);
-      xhr.send(formData);
-    });
+      // Store the PDF ID in localStorage
+      setPdfId(docId);
+      localStorage.setItem('latest_pdf_id', docId);
+      
+      toast.success("PDF uploaded successfully! Your chatbot is being prepared.");
+      
+      // Start checking for chatbot readiness
+      setTimeout(() => checkChatbotStatus(docId), 10000);
+      
+      setUploadProgress(100);
+      
+    } catch (error: any) {
+      console.error('Upload error:', error);
+      toast.error(error.message || "Failed to upload PDF");
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   const resetApiKey = () => {
     setApiKey(null);
+    localStorage.removeItem('gemini_api_key');
   };
 
   return {
