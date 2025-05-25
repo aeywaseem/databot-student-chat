@@ -1,8 +1,8 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Send } from "lucide-react";
-import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/contexts/AuthContext';
 
 interface Message {
@@ -55,21 +55,12 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ apiKey, pdfId, isReady })
     setIsLoading(true);
     
     try {
-      // Call Supabase edge function to query the document
-      const { data, error } = await supabase.functions.invoke('query-document', {
-        body: {
-          query: input,
-          pdfId: pdfId,
-          apiKey: apiKey,
-          userId: user.id
-        }
-      });
-      
-      if (error) throw error;
+      // Simple mock response for now since we don't have the edge functions
+      await new Promise(resolve => setTimeout(resolve, 1000));
       
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: data.response,
+        content: "I'm a demo chatbot. Your document processing functionality will be available once you set up the edge functions in Supabase.",
         sender: 'bot',
         timestamp: new Date()
       };

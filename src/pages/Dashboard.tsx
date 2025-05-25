@@ -2,7 +2,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import DashboardLayout from '@/components/DashboardLayout';
-import GeminiKeyInput from '@/components/GeminiKeyInput';
 import ChatInterface from '@/components/ChatInterface';
 import DashboardHeader from '@/components/dashboard/DashboardHeader';
 import DashboardGuides from '@/components/dashboard/DashboardGuides';
@@ -19,13 +18,10 @@ const Dashboard: React.FC = () => {
     chatbotReady,
     uploadProgress,
     setPdfFile,
-    handleApiKeySubmit,
-    handleUploadPDF,
-    resetApiKey
+    handleUploadPDF
   } = useChatbot();
   
-  const showUploadSection = apiKey && !isUploading && !pdfId;
-  const showProcessingIndicator = pdfId && !chatbotReady;
+  const showUploadSection = !isUploading && !pdfId;
   const showChatInterface = pdfId && chatbotReady;
   
   return (
@@ -34,9 +30,7 @@ const Dashboard: React.FC = () => {
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
-          {!apiKey ? (
-            <GeminiKeyInput onKeySubmit={handleApiKeySubmit} apiKey={apiKey} />
-          ) : showUploadSection ? (
+          {showUploadSection ? (
             <UploadSection 
               pdfFile={pdfFile}
               setPdfFile={setPdfFile}
@@ -46,7 +40,7 @@ const Dashboard: React.FC = () => {
             />
           ) : (
             <ChatInterface 
-              apiKey={apiKey || ''} 
+              apiKey={apiKey} 
               pdfId={pdfId} 
               isReady={chatbotReady} 
             />
@@ -56,8 +50,8 @@ const Dashboard: React.FC = () => {
         <div>
           <DashboardGuides 
             apiKey={apiKey}
-            onChangeApiKey={resetApiKey}
-            showProcessingIndicator={showProcessingIndicator}
+            onChangeApiKey={() => {}} // No longer needed
+            showProcessingIndicator={false}
           />
         </div>
       </div>
