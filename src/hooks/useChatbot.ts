@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { toast } from "@/components/ui/sonner";
 import { supabase } from "@/lib/supabase";
@@ -89,15 +88,12 @@ export const useChatbot = () => {
       // 3. Upload the PDF file to Supabase Storage
       const filePath = `documents/${user.id}/${docId}/${pdfFile.name}`;
       
-      // Upload with progress tracking
+      setUploadProgress(25); // Start upload
+      
+      // Upload without progress tracking (Supabase doesn't support onUploadProgress)
       const { error: uploadError } = await supabase.storage
         .from('pdfs')
-        .upload(filePath, pdfFile, {
-          onUploadProgress: (progress) => {
-            const percentCompleted = Math.round((progress.loaded * 50) / progress.total);
-            setUploadProgress(percentCompleted); // Max 50% for upload phase
-          }
-        });
+        .upload(filePath, pdfFile);
         
       if (uploadError) throw uploadError;
         
