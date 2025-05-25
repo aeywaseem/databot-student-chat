@@ -36,39 +36,26 @@ export const useChatbot = () => {
       // 1. Generate a unique ID for the document
       const docId = uuidv4();
       
-      // 2. Upload the PDF file to Supabase Storage
-      const filePath = `documents/${user.id}/${docId}/${pdfFile.name}`;
-      
       setUploadProgress(25);
       
-      // Upload to storage
-      const { error: uploadError } = await supabase.storage
-        .from('pdfs')
-        .upload(filePath, pdfFile);
-        
-      if (uploadError) throw uploadError;
-        
+      // 2. Read the PDF file content
+      const fileContent = await pdfFile.arrayBuffer();
+      const base64Content = btoa(String.fromCharCode(...new Uint8Array(fileContent)));
+      
       setUploadProgress(50);
       
-      // Store document info in the documents table (which exists in your DB)
-      const { error: insertError } = await supabase
-        .from('documents')
-        .insert({
-          id: docId,
-          content: '', // Will be populated by processing
-          metadata: {
-            user_id: user.id,
-            file_name: pdfFile.name,
-            file_size: pdfFile.size,
-            file_path: filePath
-          },
-          embedding: null // Will be populated by processing
-        });
-        
-      if (insertError) {
-        console.log('Insert error:', insertError);
-        // If documents table doesn't exist either, we'll just store in localStorage
-      }
+      // 3. Store document info with content in localStorage for now
+      // In a real implementation, this would go to your vector database
+      const documentData = {
+        id: docId,
+        user_id: user.id,
+        file_name: pdfFile.name,
+        file_size: pdfFile.size,
+        content: base64Content,
+        created_at: new Date().toISOString()
+      };
+      
+      localStorage.setItem(`document_${docId}`, JSON.stringify(documentData));
       
       setUploadProgress(75);
       
