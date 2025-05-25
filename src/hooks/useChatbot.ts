@@ -22,6 +22,20 @@ export const useChatbot = () => {
       setChatbotReady(true); // Assume ready if we have a PDF ID
     }
   }, []);
+
+  // Helper function to convert ArrayBuffer to base64 safely
+  const arrayBufferToBase64 = (buffer: ArrayBuffer): string => {
+    const bytes = new Uint8Array(buffer);
+    let binary = '';
+    const chunkSize = 8192; // Process in chunks to avoid stack overflow
+    
+    for (let i = 0; i < bytes.length; i += chunkSize) {
+      const chunk = bytes.slice(i, i + chunkSize);
+      binary += String.fromCharCode.apply(null, Array.from(chunk));
+    }
+    
+    return btoa(binary);
+  };
   
   const handleUploadPDF = async () => {
     if (!pdfFile || !user) {
@@ -38,9 +52,9 @@ export const useChatbot = () => {
       
       setUploadProgress(25);
       
-      // 2. Read the PDF file content
+      // 2. Read the PDF file content safely
       const fileContent = await pdfFile.arrayBuffer();
-      const base64Content = btoa(String.fromCharCode(...new Uint8Array(fileContent)));
+      const base64Content = arrayBufferToBase64(fileContent);
       
       setUploadProgress(50);
       
